@@ -7,8 +7,8 @@ canvas.height = window.innerHeight - 100;
 var dino = {
     x: 10,
     y: 200,
-    width: 50,
-    height: 50,
+    width: 10,
+    height: 10,
     draw(){
         ctx.fillStyle = 'green';
         ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -19,8 +19,8 @@ class Cactus {
     constructor() {
         this.x = 500;
         this.y = 200;
-        this.width = 50;
-        this.height = 50;
+        this.width = 5;
+        this.height = 5;
     }
     draw(){
         ctx.fillStyle = 'red';
@@ -28,9 +28,8 @@ class Cactus {
     }
 }
 
-let animation;
+
 function animated() {
-    animation = requestAnimationFrame(animated);
     timer++;
     ctx.clearRect(0,0, canvas.width, canvas.height);
     dino.draw();
@@ -64,17 +63,20 @@ function colision(dino, cactus) {
     var dify = cactus.y - (dino.y + dino.height);
     if(difx < 0 && dify <0 ){
         ctx.clearRect(0,0, canvas.width, canvas.height);
-        cancelAnimationFrame(animation);
+        clearInterval(animated())
     }
 }
 
 var timer = 0;
 var cactuses = [];
-animated();
+setInterval(() => animated(), 20);
 
 var jumping = false;
-document.addEventListener('keydown', function(e) {
-    if(e.code === 'Space'){
-        jumping = true;
-    }
-})
+
+if(dino.y < 200){
+    document.addEventListener('keydown', function(e) {
+        if(e.code === 'Space'){
+            jumping = true;
+        }
+    })
+}
