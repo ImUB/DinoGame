@@ -4,6 +4,7 @@ var ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth - 100;
 canvas.height = window.innerHeight - 100;
 
+
 var dino = {
     x: 10,
     y: 200,
@@ -14,10 +15,9 @@ var dino = {
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 }
-
 class Cactus {
     constructor() {
-        this.x = 500;
+        this.x = canvas.width;
         this.y = 200;
         this.width = 5;
         this.height = 5;
@@ -27,11 +27,11 @@ class Cactus {
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 }
-
-
 function animated() {
     timer++;
     ctx.clearRect(0,0, canvas.width, canvas.height);
+    ctx.fillStyle = "black";
+    ctx.fillRect(0,0, canvas.width, canvas.height);
     dino.draw();
     if(timer % 60 === 0){
         var cactus = new Cactus();
@@ -41,9 +41,9 @@ function animated() {
         if(a.x < -a.width){
             o.splice(i,1);
         }
-        colision(dino, a);
         a.x = a.x -2;
-        a.draw()
+        a.draw();
+        colision(dino, a);
     })
     if(jumping == true){
         dino.y = dino.y - 2;
@@ -57,26 +57,24 @@ function animated() {
         }
     }
 }
-
 function colision(dino, cactus) {
     var difx = cactus.x - (dino.x + dino.width);
     var dify = cactus.y - (dino.y + dino.height);
     if(difx < 0 && dify <0 ){
-        ctx.clearRect(0,0, canvas.width, canvas.height);
-        clearInterval(animated())
+        clearInterval(interval);
+        ctx.font = "30px Arial";
+        ctx.fillStyle = "white";
+        ctx.fillText("Game Over!", canvas.width/3, canvas.height/2);
     }
 }
+document.addEventListener('keydown', function(e) {
+    if(e.code === 'Space'){
+        if(dino.y == 200)
+        jumping = true;
+    }
+})
 
 var timer = 0;
 var cactuses = [];
-setInterval(() => animated(), 20);
-
 var jumping = false;
-
-if(dino.y < 200){
-    document.addEventListener('keydown', function(e) {
-        if(e.code === 'Space'){
-            jumping = true;
-        }
-    })
-}
+var interval = setInterval(() => animated(), 20);
